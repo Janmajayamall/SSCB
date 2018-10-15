@@ -1,0 +1,15 @@
+{
+    "name": "SSCB@BukitVista",
+    "description": "An api which is used by SSCB-BukitVista-V1 for providing its services",
+    "repository":"",
+    "keywords":[
+        "sscb",
+        "BukitVista",
+        "travel",
+        "DialogFlow",
+        "Self-Service-Chat-Bot",
+        "Indonesia",
+        "Bali",
+        "Messenger"
+    ]
+}
