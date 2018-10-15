@@ -7,8 +7,17 @@ const http = require('http');
 const server = express();
 
 //Define Intent Requests
-const requestDirections = 'Request Directions';
+
+//Intents for Directions
+const requestDirectionsIdConfirmed = 'Request Directions - ID Confirmed'; // reply enter again
+const requestDirectionsIDNotConfirmedEnteredAgain = 'Request Directions - ID Not Confirmed - Entered Again';  // reply enter again
+const requestDirectionsIdConfirmedNotFound = 'Request Directions - ID confirmed - Not Found'; // reply call helpline
+
+//Intents for Contact-info
 const requestContactInfo = 'Request Contact-info'
+
+// Define Intent Requests end
+
 
 server.use(bodyParser.urlencoded({
     extended:true
@@ -23,7 +32,21 @@ server.post('/get-info', (req, res)=>{
     
 
     //Response according to intent
-    if (intent === requestDirections){
+    if (intent === requestDirectionsIdConfirmed || intent === requestDirectionsIDNotConfirmedEnteredAgain || intent === requestDirectionsIdConfirmedNotFound){
+
+            const bookingID = null;
+
+            if (intent === requestDirectionsIdConfirmed){
+                bookingID = req.body.queryResult &&  req.body.queryResult.outputContexts[0].lifespanCount === 2  ? 
+                                                                        req.body.queryResult.outputContexts[1].parameters.bookingID : null;
+            } else if (intent === requestDirectionsIDNotConfirmedEnteredAgain){
+                bookingID = req.body.queryResult &&  req.body.queryResult.parameters && req.body.queryResult.parameters.bookingID ? 
+                                                                                    req.body.queryResult.parameters.bookingID : null;
+            } else if (intent === requestDirectionsIdConfirmedNotFound) {
+                bookingID = req.body.queryResult &&  req.body.queryResult.outputContexts  ? 
+                                                                        req.body.queryResult.outputContexts[0].parameters.bookingID : null;
+            }
+
             const bookingID = req.body.queryResult &&  req.body.queryResult.parameters && req.body.queryResult.parameters.bookingID ? 
                                                                                             req.body.queryResult.parameters.bookingID : null;
             const reqURL = encodeURI(`http://internal.bukitvista.com/tools/api/integromatcancelation/${bookingID}`);
